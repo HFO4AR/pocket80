@@ -12,6 +12,7 @@ typedef struct {
     float spd;
     float cur;
     float init_pos;
+    float current_pos;
     int8_t temp;
     int8_t error;
 }ak80_data_t;

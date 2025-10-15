@@ -104,7 +104,10 @@ int main(void)
 
   HAL_UART_Receive_IT(&huart1,uart_rx,sizeof(uart_rx));
   HAL_Delay(100);
-  search_duck_init(&ak80_pitch_data,0);
+  // comm_can_set_pos_spd(ak80_pitch_data.id,0,0,0);
+  // search_duck_init(&ak80_pitch_data,0);
+  search_duck_init(&ak80_yaw_data,104);
+  // HAL_Delay(100);
   // comm_can_set_pos_spd(ak80_pitch_data.id,1000,3000,100);
   /* USER CODE END 2 */
 

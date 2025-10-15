@@ -4,7 +4,7 @@
 //#include "usart.h"
 #include "gpio.h"
  uint8_t tx_data[8];
- uint8_t rx_data[8];
+ // uint8_t rx_data[8];
 
 	float motor_pos_2[2] = {0.0,0.0};
 	float motor_spd_2[2] = {0.0,0.0};
@@ -128,18 +128,18 @@ buffer_append_int16(buffer,RPA/10.0, & send_index1);
 			((uint32_t)CAN_PACKET_SET_POS_SPD << 8), buffer, send_index1);
 }
 
-void motor_receive(float* motor_pos,float* motor_spd,float* motor_cur,int8_t *motor_temp,int8_t *motor_error)
-  {     
-    recesive_mesage_can(rx_data);		
-   int16_t pos_int = (rx_data[0]<<8)|rx_data[1];
-	 int16_t spd_int = (rx_data[2]<<8)|rx_data[3];
-   int16_t cur_int = (rx_data[4]<<8)|rx_data[5];                                                                              
-    *motor_pos= (float)( pos_int * 0.1f); //电机位置                                                          
-    *motor_spd= (float)( spd_int * 10.0f);//电机速度
-    *motor_cur= (float) ( cur_int * 0.01f);//电机电流
-    *motor_temp= rx_data[6] ;//电机温度
-    *motor_error= rx_data[7] ;//电机故障码                       
-  }
+// void motor_receive(float* motor_pos,float* motor_spd,float* motor_cur,int8_t *motor_temp,int8_t *motor_error)
+//   {
+//     recesive_mesage_can(rx_data);
+//    int16_t pos_int = (rx_data[0]<<8)|rx_data[1];
+// 	 int16_t spd_int = (rx_data[2]<<8)|rx_data[3];
+//    int16_t cur_int = (rx_data[4]<<8)|rx_data[5];
+//     *motor_pos= (float)( pos_int * 0.1f); //电机位置
+//     *motor_spd= (float)( spd_int * 10.0f);//电机速度
+//     *motor_cur= (float) ( cur_int * 0.01f);//电机电流
+//     *motor_temp= rx_data[6] ;//电机温度
+//     *motor_error= rx_data[7] ;//电机故障码
+//   }
 
 
 	

@@ -7,13 +7,13 @@
 
 
 typedef enum {
-	CAN_PACKET_SET_DUTY = 0,         //占空比模式
-	CAN_PACKET_SET_CURRENT,         //电流环模式
-	CAN_PACKET_SET_CURRENT_BRAKE,   // 电流刹车模式
-	CAN_PACKET_SET_RPM,             // 转速模式
-	CAN_PACKET_SET_POS,              // 位置模式
-	CAN_PACKET_SET_ORIGIN_HERE,      //设置原点模式
-	CAN_PACKET_SET_POS_SPD,          //位置速度环模式
+	CAN_PACKET_SET_DUTY = 0,         //??????
+	CAN_PACKET_SET_CURRENT,         //????????
+	CAN_PACKET_SET_CURRENT_BRAKE,   // ?????????
+	CAN_PACKET_SET_RPM,             // ?????
+	CAN_PACKET_SET_POS,              // λ????
+	CAN_PACKET_SET_ORIGIN_HERE,      //?????????
+	CAN_PACKET_SET_POS_SPD,          //λ????????
 } CAN_PACKET_ID;
 
 

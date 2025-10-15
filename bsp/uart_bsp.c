@@ -81,13 +81,18 @@ char data[50];
 int data_i=0;
 double yaw_err=0;
 double pitch_err=0;
-
+extern ak80_data_t ak80_pitch_data;
+extern ak80_data_t ak80_yaw_data;
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     if (huart == &huart1) {
         if (uart_rx[0]=='\n') {
             data[data_i] = '\0';
             HAL_UART_Transmit_IT(&huart1, (uint8_t*)data, strlen(data));
             parseTwoFloats(data, &yaw_err, &pitch_err);
+
+            //当前位置设为实际位置
+            ak80_pitch_data.current_pos=ak80_pitch_data.pos;
+            ak80_yaw_data.current_pos=ak80_yaw_data.pos;
 
             //重置接收
             memset(data, 0, sizeof(data));
