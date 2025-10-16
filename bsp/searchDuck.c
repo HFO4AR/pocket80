@@ -4,12 +4,15 @@
 
 #include "searchDuck.h"
 
+#include <stdlib.h>
 #include <string.h>
 
 #include "ak80_8.h"
 #include "can.h"
 
 #define MOTOR_ENABLE 1
+#define MOTOR_DEADBAND 1
+#define MOTOR_MAX_MOV_ANGLE 90
 extern float motor_pos;
 ak80_data_t ak80_pitch_data;
 ak80_data_t ak80_yaw_data;
@@ -60,6 +63,7 @@ void search_duck_init(ak80_data_t *ak80_data,int id) {
         get_ak80_data(ak80_data);
         HAL_Delay(10);
     };
+    ak80_data->init_pos=ak80_data->pos;
     ak80_data->current_pos=ak80_data->pos;
     if (MOTOR_ENABLE) {
         comm_can_set_pos_spd(ak80_data->id,ak80_data->current_pos+1,3000,200);
@@ -69,6 +73,23 @@ void search_duck_init(ak80_data_t *ak80_data,int id) {
 }
 
 void search_duck(double yaw_err,double pitch_err) {
+    //死区检测
+    if (abs(yaw_err)<MOTOR_DEADBAND) {
+        yaw_err=0;
+    }
+    if (abs(pitch_err)<MOTOR_DEADBAND) {
+        pitch_err=0;
+    }
+
+    //限位
+    if (ak80_yaw_data.current_pos+yaw_err>ak80_yaw_data.init_pos+MOTOR_MAX_MOV_ANGLE||ak80_yaw_data.current_pos+yaw_err>ak80_yaw_data.init_pos-MOTOR_MAX_MOV_ANGLE) {
+        yaw_err=MOTOR_MAX_MOV_ANGLE-ak80_yaw_data.current_pos;
+    }
+    if (ak80_pitch_data.current_pos+pitch_err>ak80_pitch_data.init_pos+MOTOR_MAX_MOV_ANGLE||ak80_pitch_data.current_pos+pitch_err>ak80_pitch_data.init_pos-MOTOR_MAX_MOV_ANGLE) {
+        pitch_err=MOTOR_MAX_MOV_ANGLE-ak80_pitch_data.current_pos;
+    }
+
+
     if (MOTOR_ENABLE) {
         comm_can_set_pos_spd(ak80_pitch_data.id,ak80_pitch_data.current_pos+pitch_err,6000,3000);
     }

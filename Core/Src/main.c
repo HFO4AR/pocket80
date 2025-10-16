@@ -101,7 +101,6 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   can_filter_init();
-
   HAL_UART_Receive_IT(&huart1,uart_rx,sizeof(uart_rx));
   HAL_Delay(100);
   // comm_can_set_pos_spd(ak80_pitch_data.id,0,0,0);

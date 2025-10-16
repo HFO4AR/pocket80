@@ -116,16 +116,17 @@ int32_t send_index = 1;
 			((uint32_t) CAN_PACKET_SET_ORIGIN_HERE << 8), &buffer, send_index);
 }
 
-void comm_can_set_pos_spd(uint8_t controller_id, float pos,int16_t spd, int16_t RPA ) {   //位置速度环模式
+void comm_can_set_pos_spd(uint8_t controller_id, float pos, int16_t spd, int16_t RPA) {
+	//位置速度环模式
 	int32_t send_index = 0;
-    int16_t send_index1 = 4;
+	int16_t send_index1 = 4;
 	uint8_t buffer[8];
-	buffer_append_int32(buffer, (int32_t)(pos * 10000.0f), &send_index);
-buffer_append_int16(buffer,spd/10.0, & send_index1);
-	
-buffer_append_int16(buffer,RPA/10.0, & send_index1);
+	buffer_append_int32(buffer, (int32_t) (pos * 10000.0f), &send_index);
+	buffer_append_int16(buffer, spd / 10.0, &send_index1);
+
+	buffer_append_int16(buffer, RPA / 10.0, &send_index1);
 	comm_can_transmit_eid(controller_id |
-			((uint32_t)CAN_PACKET_SET_POS_SPD << 8), buffer, send_index1);
+	                      ((uint32_t) CAN_PACKET_SET_POS_SPD << 8), buffer, send_index1);
 }
 
 // void motor_receive(float* motor_pos,float* motor_spd,float* motor_cur,int8_t *motor_temp,int8_t *motor_error)
