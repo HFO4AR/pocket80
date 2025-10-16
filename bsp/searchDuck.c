@@ -12,7 +12,8 @@
 
 #define MOTOR_ENABLE 1
 #define MOTOR_DEADBAND 1
-#define MOTOR_MAX_MOV_ANGLE 90
+#define MOTOR_MAX_YAW_ANGLE 90
+#define MOTOR_MAX_PITCH_ANGLE 90
 extern float motor_pos;
 ak80_data_t ak80_pitch_data;
 ak80_data_t ak80_yaw_data;
@@ -33,11 +34,11 @@ union data {
         int16_t pos;
     } read;
 };
-union data rx_data;
 void get_ak80_data(ak80_data_t *ak80_data) {
+    union data rx_data;
     CAN_RxHeaderTypeDef   RxMessage;
     HAL_CAN_GetRxMessage(&hcan2,CAN_RX_FIFO0,&RxMessage,rx_data.input);
-    int stack[8];
+    uint8_t stack[8];
     for (int i = 0; i < 8; i++) {
         stack[i]=rx_data.input[i];
     }
@@ -82,11 +83,17 @@ void search_duck(double yaw_err,double pitch_err) {
     }
 
     //限位
-    if (ak80_yaw_data.current_pos+yaw_err>ak80_yaw_data.init_pos+MOTOR_MAX_MOV_ANGLE||ak80_yaw_data.current_pos+yaw_err>ak80_yaw_data.init_pos-MOTOR_MAX_MOV_ANGLE) {
-        yaw_err=MOTOR_MAX_MOV_ANGLE-ak80_yaw_data.current_pos;
+    if (ak80_yaw_data.current_pos + yaw_err > ak80_yaw_data.init_pos + MOTOR_MAX_YAW_ANGLE) {
+        yaw_err = ak80_yaw_data.init_pos+MOTOR_MAX_YAW_ANGLE - ak80_yaw_data.current_pos;
+    }else if (ak80_yaw_data.current_pos
+        + yaw_err < ak80_yaw_data.init_pos - MOTOR_MAX_YAW_ANGLE) {
+        yaw_err = ak80_yaw_data.init_pos-MOTOR_MAX_YAW_ANGLE - ak80_yaw_data.current_pos;
     }
-    if (ak80_pitch_data.current_pos+pitch_err>ak80_pitch_data.init_pos+MOTOR_MAX_MOV_ANGLE||ak80_pitch_data.current_pos+pitch_err>ak80_pitch_data.init_pos-MOTOR_MAX_MOV_ANGLE) {
-        pitch_err=MOTOR_MAX_MOV_ANGLE-ak80_pitch_data.current_pos;
+    if (ak80_pitch_data.current_pos + pitch_err > ak80_pitch_data.init_pos + MOTOR_MAX_PITCH_ANGLE) {
+        pitch_err = ak80_yaw_data.init_pos+MOTOR_MAX_PITCH_ANGLE - ak80_pitch_data.current_pos;
+    }else if (ak80_pitch_data.
+        current_pos + pitch_err < ak80_pitch_data.init_pos - MOTOR_MAX_PITCH_ANGLE) {
+        pitch_err = ak80_yaw_data.init_pos-MOTOR_MAX_PITCH_ANGLE - ak80_pitch_data.current_pos;
     }
 
 
