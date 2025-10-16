@@ -11,7 +11,7 @@
 #include "can.h"
 
 #define MOTOR_ENABLE 1
-#define MOTOR_DEADBAND 0.01
+#define MOTOR_DEADBAND 0
 #define MOTOR_MAX_YAW_ANGLE 90
 #define MOTOR_MAX_PITCH_ANGLE 90
 extern float motor_pos;
@@ -74,8 +74,8 @@ void search_duck_init(ak80_data_t *ak80_data,int id) {
 }
 
 void search_duck(double yaw_err,double pitch_err) {
-    yaw_err=yaw_err*0.1;
-    pitch_err=pitch_err*0.1;
+    yaw_err=yaw_err*0.2;
+    pitch_err=pitch_err*0.2;
 
     //死区检测
     if (abs(yaw_err)<MOTOR_DEADBAND) {
@@ -93,23 +93,24 @@ void search_duck(double yaw_err,double pitch_err) {
         yaw_err = ak80_yaw_data.init_pos-MOTOR_MAX_YAW_ANGLE - ak80_yaw_data.current_pos;
     }
     if (ak80_pitch_data.current_pos + pitch_err > ak80_pitch_data.init_pos + MOTOR_MAX_PITCH_ANGLE) {
-        pitch_err = ak80_yaw_data.init_pos+MOTOR_MAX_PITCH_ANGLE - ak80_pitch_data.current_pos;
+        pitch_err = ak80_pitch_data.init_pos+MOTOR_MAX_PITCH_ANGLE - ak80_pitch_data.current_pos;
     }else if (ak80_pitch_data.
         current_pos + pitch_err < ak80_pitch_data.init_pos - MOTOR_MAX_PITCH_ANGLE) {
-        pitch_err = ak80_yaw_data.init_pos-MOTOR_MAX_PITCH_ANGLE - ak80_pitch_data.current_pos;
+        pitch_err = ak80_pitch_data.init_pos-MOTOR_MAX_PITCH_ANGLE - ak80_pitch_data.current_pos;
     }
 
 
     if (MOTOR_ENABLE) {
-        comm_can_set_pos_spd(ak80_pitch_data.id,ak80_pitch_data.current_pos+pitch_err,3000,200);
+        comm_can_set_pos_spd(ak80_pitch_data.id,ak80_pitch_data.current_pos+pitch_err,6000,3000);
     }
     // comm_can_set_pos_spd(ak80_pitch_data.id,ak80_pitch_data.current_pos+pitch_err,6000,3000);
     get_ak80_data(&ak80_pitch_data);
     if (MOTOR_ENABLE) {
-        comm_can_set_pos_spd(ak80_yaw_data.id,ak80_yaw_data.current_pos+yaw_err,3000,200);
+        comm_can_set_pos_spd(ak80_yaw_data.id,ak80_yaw_data.current_pos+yaw_err,6000,3000);
     }
     // comm_can_set_pos_spd(ak80_yaw_data.id,ak80_yaw_data.current_pos+yaw_err,3000,200);
     get_ak80_data(&ak80_yaw_data);
+    get_ak80_data(&ak80_pitch_data);
     // comm_can_set_pos(ak80_pitch_data.id,ak80_pitch_data.pos+pitch_err);
     // HAL_Delay(100);
 }
