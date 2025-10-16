@@ -103,8 +103,9 @@ int main(void)
   can_filter_init();
   HAL_UART_Receive_IT(&huart1,uart_rx,sizeof(uart_rx));
   HAL_Delay(100);
+  HAL_GPIO_WritePin(GPIOC,GPIO_PIN_3,GPIO_PIN_SET);
   // comm_can_set_pos_spd(ak80_pitch_data.id,0,0,0);
-  // search_duck_init(&ak80_pitch_data,0);
+  search_duck_init(&ak80_pitch_data,0);
   search_duck_init(&ak80_yaw_data,104);
   // HAL_Delay(100);
   // comm_can_set_pos_spd(ak80_pitch_data.id,1000,3000,100);
@@ -115,7 +116,7 @@ int main(void)
   while (1)
   {
     search_duck(yaw_err,pitch_err);
-    HAL_Delay(10);
+    HAL_Delay(100);
     // comm_can_set_pos_spd(ak80_pitch_data.id,180,3000,200);
     // HAL_UART_Transmit_IT(&huart1,uart_rx,sizeof(uart_rx));
     /* USER CODE END WHILE */
