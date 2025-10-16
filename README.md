@@ -1,4 +1,4 @@
-# 大江 POCKETC 80
+# 大江 POCKET 80
 
 使用两个AK80-8电机，承载intel realsense d435
 
